@@ -12,21 +12,16 @@ namespace RaidArtifactsFilter
     {
         private static RaidCommunication? _instance;
         public static RaidCommunication Instance => _instance ??= new RaidCommunication();
-
-        private readonly RaidToolkitClient _client;
-
-        public RaidCommunication()
-        {
-            _client = new RaidToolkitClient();
-        }
-
+        
         public async Task<Artifact[]> GetArtifacts()
         {
+
+            var client = new RaidToolkitClient();
             try
             {
-                _client.Connect();
-                var accounts = await _client.AccountApi.GetAccounts();
-                return await _client.AccountApi.GetArtifacts(accounts[0].Id);
+                client.Connect();
+                var accounts = await client.AccountApi.GetAccounts();
+                return await client.AccountApi.GetArtifacts(accounts[0].Id);
             }
             catch (Exception ex)
             {
@@ -35,16 +30,17 @@ namespace RaidArtifactsFilter
             }
             finally
             {
-                _client.Disconnect();
+                client.Disconnect();
             }
         }
 
         public async Task<StaticArtifactData> GetStaticArtifactData()
         {
+            var client = new RaidToolkitClient();
             try
             {
-                _client.Connect();
-                return await _client.StaticDataApi.GetArtifactData();
+                client.Connect();
+                return await client.StaticDataApi.GetArtifactData();
             }
             catch (Exception ex)
             {
@@ -53,15 +49,17 @@ namespace RaidArtifactsFilter
             }
             finally
             {
-                _client.Disconnect();
+                client.Disconnect();
             }
         }
+
         public async Task<IReadOnlyDictionary<string, string>> GetLocalizedStrings()
         {
+            var client = new RaidToolkitClient();
             try
             {
-                _client.Connect();
-                return await _client.StaticDataApi.GetLocalizedStrings();
+                client.Connect();
+                return await client.StaticDataApi.GetLocalizedStrings();
             }
             catch (Exception ex)
             {
@@ -70,7 +68,7 @@ namespace RaidArtifactsFilter
             }
             finally
             {
-                _client.Disconnect();
+                client.Disconnect();
             }
         }
     }

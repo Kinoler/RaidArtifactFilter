@@ -12,7 +12,7 @@ namespace FileCompiler.Visitors
         public override Predicate<TItem> Visit(TokenHandler expression)
         {
             var token = expression.GetNextToken();
-            if (token != null && token.Type != TokenType.KeyWord)
+            if (token != null && token.Type != TokenType.KeyWord &&  token.Type != TokenType.BracketStart)
                 throw new Exception($"The {token.Value} is not a keyword. Position: {token.Position}");
 
             var tokenVisitor = GetVisitor(token, expression);

@@ -22,12 +22,12 @@ namespace FileCompiler.PublicAPI
 
         public void RegisterPropertyAction(string name, Func<TItem, string> func)
         {
-            TokenRegistryService<TItem>.Instance.RegisterPropertyAction(name, null);
+            TokenRegistryService<TItem>.Instance.RegisterPropertyAction(name, new PropertyVisitor<TItem>(func));
         }
 
         public void RegisterPropertyAction(string name, Func<TItem, int> func)
         {
-            TokenRegistryService<TItem>.Instance.RegisterPropertyAction(name, null);
+            TokenRegistryService<TItem>.Instance.RegisterPropertyAction(name, new PropertyVisitor<TItem>(func));
         }
     }
 }

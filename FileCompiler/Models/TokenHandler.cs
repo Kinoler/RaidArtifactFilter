@@ -18,7 +18,7 @@ namespace FileCompiler.Models
 
         public Token GetNextToken()
         {
-            return GetToken(_position += 1);
+            return GetToken(_position++);
         }
 
         public Token SeeNextToken()

@@ -41,8 +41,8 @@ namespace FileCompiler.Services
 
         internal Visitor<TItem> ResolveProperty(Token token)
         {
-            return FunctionKeyWordActions.ContainsKey(token.Value)
-                ? FunctionKeyWordActions[token.Value]
+            return PropertyKeyWordActions.ContainsKey(token.Value)
+                ? PropertyKeyWordActions[token.Value]
                 : throw new Exception($"The Property {token.Value} does not found. Position: {token.Position}.");
         }
     }

@@ -16,7 +16,7 @@ namespace FileCompiler.Visitors
             var firstPredicate = tokenVisitor.Visit(expression);
 
             token = expression.SeeNextToken();
-            if (token.Type == TokenType.IfOperator)
+            if (token is { Type: TokenType.IfOperator })
             {
                 expression.GetNextToken();
                 var trueArgAction = GetArgument(expression);
@@ -41,7 +41,7 @@ namespace FileCompiler.Visitors
             };
 
             var token = expression.GetNextToken();
-            while (token != null && token.Type == TokenType.LogicOperator)
+            while (token is { Type: TokenType.LogicOperator })
             {
                 if (token.Value == "and")
                     predicators.Last().Add(GetArgument(expression));
