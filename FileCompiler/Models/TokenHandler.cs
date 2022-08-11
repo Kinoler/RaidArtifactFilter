@@ -9,21 +9,27 @@ namespace FileCompiler.Models
     public class TokenHandler
     {
         private readonly Token[] _tokens;
-        private int _position;
+        public int Position;
 
         public TokenHandler(Token[] tokens)
         {
             _tokens = tokens;
+            Position = -1;
         }
 
         public Token GetNextToken()
         {
-            return GetToken(_position++);
+            return GetToken(++Position);
+        }
+
+        public Token GetCurrentToken()
+        {
+            return GetToken(Position);
         }
 
         public Token SeeNextToken()
         {
-            return GetToken(_position + 1);
+            return GetToken(Position + 1);
         }
 
         private Token GetToken(int pos)

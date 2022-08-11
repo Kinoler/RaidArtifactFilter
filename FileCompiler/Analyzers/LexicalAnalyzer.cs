@@ -19,7 +19,8 @@ namespace FileCompiler.Analyzers
                                        "(?<Bracket>[\\(\\)])|" +
                                        "(?<ArgumentDelimiter>[,])|" +
                                        "(?<NegateOperator>[!])|" +
-                                       "(?<ArithmeticOperator>[+\\-\\*/=])";
+                                       "(?<ComparisonOperator>(?:==|!=|<|<=|>|>=))|" +
+                                       "(?<ArithmeticOperator>[+\\-\\*/])";
 
         public TokenHandler Analyze(string str)
         {
@@ -46,6 +47,8 @@ namespace FileCompiler.Analyzers
                 return TokenType.KeyWord;
             if (groupName == "ArithmeticOperator")
                 return TokenType.ArithmeticOperator;
+            if (groupName == "ComparisonOperator")
+                return TokenType.ComparisonOperator;
             if (groupName == "Stat" || groupName == "Number")
                 return TokenType.Argument;
             if (groupName == "LogicOperator")

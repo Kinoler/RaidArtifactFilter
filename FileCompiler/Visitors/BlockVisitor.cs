@@ -9,53 +9,41 @@ namespace FileCompiler.Visitors
 {
     internal class BlockVisitor<TItem> : Visitor<TItem>
     {
-        private Predicate<TItem> GetArgument(TokenHandler expression)
+        public override Predicate<TItem> VisitInternal(TokenHandler expression)
         {
             var token = expression.GetNextToken();
             var tokenVisitor = GetVisitor(token, expression);
-            var firstPredicate = tokenVisitor.Visit(expression);
+            var predicate = tokenVisitor.Visit(expression);
 
-            token = expression.SeeNextToken();
-            if (token is { Type: TokenType.IfOperator })
-            {
-                expression.GetNextToken();
-                var trueArgAction = GetArgument(expression);
-
-                token = expression.GetNextToken();
-                if (token.Type != TokenType.IfOperatorEnd)
-                    throw new Exception();
-
-                var falseArgAction = GetArgument(expression);
-
-                return item => firstPredicate(item) ? trueArgAction(item) : falseArgAction(item);
-            }
-
-            return firstPredicate;
-        }
-
-        public override Predicate<TItem> Visit(TokenHandler expression)
-        {
             var predicators = new List<List<Predicate<TItem>>>
             {
-                new() {GetArgument(expression)},
+                new() { predicate },
             };
 
-            var token = expression.GetNextToken();
+            token = expression.GetNextToken();
             while (token is { Type: TokenType.LogicOperator })
             {
-                if (token.Value == "and")
-                    predicators.Last().Add(GetArgument(expression));
+                var value = token.Value;
 
-                if (token.Value == "or")
-                    predicators.Add(new List<Predicate<TItem>> { GetArgument(expression) });
+                token = expression.GetNextToken();
+                tokenVisitor = GetVisitor(token, expression);
+                predicate = tokenVisitor.Visit(expression);
+
+                if (value == "and")
+                {
+                    predicators.Last().Add(predicate);
+                }
+                
+                if (value == "or") 
+                {
+                    predicators.Add(new List<Predicate<TItem>> { predicate });
+                }
 
                 token = expression.GetNextToken();
             }
 
             if (token != null && token.Type != TokenType.BracketEnd)
-                throw new Exception();
-
-
+                throw new Exception("The ')' expected.");
 
             return item => predicators.Aggregate(false, (b, list) => b || list.Aggregate(true, (b1, predicate) => b1 && predicate(item)));
         }

@@ -12,9 +12,17 @@ namespace FileCompiler.Analyzers
     {
         public Predicate<TItem> Analyze<TItem>(TokenHandler tokenHandler) 
         {
-            var generalVisitor = new BlockVisitor<TItem>();
-            var result = generalVisitor.Visit(tokenHandler);
-            return result;
+            try
+            {
+                var generalVisitor = new BlockVisitor<TItem>();
+                var result = generalVisitor.Visit(tokenHandler);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"{e.Message} Position {tokenHandler.Position}");
+            }
         }
     }
 }

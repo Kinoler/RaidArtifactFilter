@@ -9,7 +9,7 @@ namespace FileCompiler.Visitors
 {
     internal class NegateVisitor<TItem> : Visitor<TItem>
     {
-        public override Predicate<TItem> Visit(TokenHandler expression)
+        public override Predicate<TItem> VisitInternal(TokenHandler expression)
         {
             var token = expression.GetNextToken();
             if (token != null && token.Type != TokenType.KeyWord &&  token.Type != TokenType.BracketStart)

@@ -16,44 +16,27 @@ namespace FileCompiler.Visitors
             FilerMultiArgsAction = filerMultiArgsAction;
         }
 
-        private Func<TItem, string> GetArgument(TokenHandler expression)
-        {
-            var token = expression.GetNextToken();
-            if (token.Type == TokenType.Argument)
-                return item => token.Value.Replace("\"", "");
-
-            var tokenVisitor = GetVisitor(token, expression);
-            var action = tokenVisitor.Visit(expression);
-
-            token = expression.GetNextToken();
-            if (token.Type != TokenType.IfOperator)
-                throw new Exception();
-
-            var trueArgAction = GetArgument(expression);
-
-            var token3 = expression.GetNextToken();
-            if (token3.Type != TokenType.IfOperatorEnd)
-                throw new Exception();
-            var falseArgAction = GetArgument(expression);
-            return (item) => action(item) ? trueArgAction(item) : falseArgAction(item);
-        }
-
-        public override Predicate<TItem> Visit(TokenHandler expression)
+        public override Predicate<TItem> VisitInternal(TokenHandler expression)
         {
             var token = expression.GetNextToken();
             if (token.Type != TokenType.BracketStart)
-                throw new Exception();
+                throw new Exception("The '(' expected.");
 
-            var argList = new List<Func<TItem, string>> { GetArgument(expression) };
+            token = expression.GetNextToken();
+            var argVisitor = GetVisitor(token, expression);
+            var argList = new List<Func<TItem, string>> { argVisitor.VisitArgument(expression) };
+
             token = expression.GetNextToken();
             while (token.Type == TokenType.ArgumentDelimiter)
             {
-                argList.Add(GetArgument(expression));
+                token = expression.GetNextToken();
+                argVisitor = GetVisitor(token, expression);
+                argList.Add(argVisitor.VisitArgument(expression));
                 token = expression.GetNextToken();
             }
 
             if (token.Type != TokenType.BracketEnd)
-                throw new Exception();
+                throw new Exception("The ')' expected.");
 
             return item => FilerMultiArgsAction(item, argList);
         }

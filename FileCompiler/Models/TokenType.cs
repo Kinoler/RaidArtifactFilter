@@ -10,6 +10,7 @@ namespace FileCompiler.Models
     {
         KeyWord,
         ArithmeticOperator,
+        ComparisonOperator,
         LogicOperator,
         NegateOperator,
         CompareOperator,

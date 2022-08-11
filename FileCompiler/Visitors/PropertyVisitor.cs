@@ -22,16 +22,16 @@ namespace FileCompiler.Visitors
             PropertyStringAction = propertyStringAction;
         }
 
-        public override Predicate<TItem> Visit(TokenHandler expression)
+        public override Func<TItem, string> VisitArgumentInternal(TokenHandler expression)
         {
             if (PropertyIntAction != null)
             {
-               // return item => PropertyIntAction(item);
+                return item => PropertyIntAction(item).ToString();
             }
 
             if (PropertyStringAction != null)
             {
-               // return item => PropertyStringAction(item);
+                return item => PropertyStringAction(item);
             }
 
             return null;
