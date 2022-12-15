@@ -64,7 +64,7 @@ namespace FileCompiler.Visitors
             return null;
         }
 
-        public virtual Predicate<TItem> Visit(TokenHandler expression)
+        public Predicate<TItem> Visit(TokenHandler expression)
         {
             var result = VisitInternal(expression);
 
@@ -74,10 +74,12 @@ namespace FileCompiler.Visitors
 
         public virtual Predicate<TItem> VisitInternal(TokenHandler expression)
         {
-            throw new NotImplementedException();
+            var result = VisitArgumentInternal(expression);
+
+            return GetPostActionVisitorArgument(expression, result)?.Visit(expression);
         }
 
-        public virtual Func<TItem, string> VisitArgument(TokenHandler expression)
+        public Func<TItem, string> VisitArgument(TokenHandler expression)
         {
             var result = VisitArgumentInternal(expression);
 

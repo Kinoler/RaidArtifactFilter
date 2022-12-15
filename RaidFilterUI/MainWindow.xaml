@@ -16,5 +16,8 @@
         <ComboBox Name="FilterFileComboBox" HorizontalAlignment="Left" Margin="173,10,0,0" VerticalAlignment="Top" Width="120" DropDownOpened="FilterFileComboBox_DropDownOpened"/>
         <CheckBox Name="InvertCheckBox" Foreground="White" Content="Keep" HorizontalAlignment="Left" Margin="306,13,0,0" VerticalAlignment="Top"/>
         <Label Foreground="White" Content="Current filter:" HorizontalAlignment="Left" Margin="93,8,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="ArtifactCheckBox" IsChecked="True" Foreground="White" Content="Artifact" HorizontalAlignment="Center" Margin="0,13,0,0" VerticalAlignment="Top"/>
+        <Label Name="CountLabel" Content="100" HorizontalAlignment="Left" Margin="95,33,0,0" VerticalAlignment="Top" Foreground="White" Width="130"/>
+        <Label Name="CountAllLabel" Content="/300" HorizontalAlignment="Left" Margin="133,32,0,0" VerticalAlignment="Top" Foreground="White" Width="130"/>
     </Grid>
 </Window>

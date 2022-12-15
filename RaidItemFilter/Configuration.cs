@@ -28,11 +28,7 @@ namespace RaidArtifactsFilter
         public Dictionary<string, string> ArgumentStatTransfer { get; set; }
         public Dictionary<string, string> ArgumentArtifactTypeTransfer { get; set; }
         public Dictionary<string, string> ArgumentArtifactSetKindTransfer { get; set; }
-        public Dictionary<string, int> ArtifactRankTransfer { get; set; }
         public Dictionary<string, int> ArtifactRarityTransfer { get; set; }
-        public Dictionary<string, int> ArtifactSetKindTransfer { get; set; }
-        public Dictionary<string, string> ArtifactFractionTransfer { get; set; }
-        public Dictionary<string, int> ArtifactFractionNumberTransfer { get; set; }
         public Dictionary<string, int> ArtifactTypeTransfer { get; set; }
         public Dictionary<string, int> ArtifactStatTransfer { get; set; }
 

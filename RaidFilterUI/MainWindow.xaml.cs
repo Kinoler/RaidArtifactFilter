@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
+using HellHades.ArtifactExtractor.Models;
 using RaidArtifactsFilter;
 using RaidArtifactsFilter.Extensions;
 using RaidFilterUI.Forms;
@@ -66,7 +67,7 @@ namespace RaidFilterUI
             });
         }
 
-        public void Filter(string? filePath, bool isKeep)
+        public void Filter(string? filePath, bool isKeep, bool isArtifacts)
         {
             TraceService.TimingArrStart();
             TraceService.Instance.TimingSpace();
@@ -79,10 +80,20 @@ namespace RaidFilterUI
             }
             try
             {
+                var jewelsFilterAction = new Func<Artifact, bool>(el => isArtifacts ?
+                    el.Kind is ArtifactKind.Weapon or ArtifactKind.Helmet or ArtifactKind.Shield or ArtifactKind.Gloves or ArtifactKind.Chest or ArtifactKind.Boots :
+                    el.Kind is ArtifactKind.Ring or ArtifactKind.Banner or ArtifactKind.Cloak);
+
                 FilterService.SetFile($"{filePath}.filter");
                 var artifacts = FilterService.GetFilteredItems(isKeep);
-                var artifactControlModes = artifacts.Select(artifact => artifact.ToArtifactControlModel()).ToList();
+                var artifactControlModes = FilterService
+                    .Artifacts
+                    .Where(jewelsFilterAction)
+                    .Select(artifact => artifact.ToArtifactControlModel(artifacts.Any(el => el.Id == artifact.Id)))
+                    .ToList();
                 TraceService.TimingArr("Filter");
+
+                CountLabel.Dispatcher.Invoke(() => CountLabel.Content = $"{artifacts.Count(jewelsFilterAction)}");
 
                 UpdateArtifactControls(artifactControlModes.ToArray());
             }
@@ -113,7 +124,7 @@ namespace RaidFilterUI
 
             for (var i = 0; i < artifactControlCache.Count; i++)
             {
-                artifactControlCache[i].Visibility = i < count ? Visibility.Visible : Visibility.Collapsed;
+                artifactControlCache[i].Visibility = i < count ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
             }
 
             return artifactControlCache.Take(count).ToArray();
@@ -182,6 +193,8 @@ namespace RaidFilterUI
                     MainGrid.Children.Add(artifactControl);
                 }
             }
+
+            CountAllLabel.Content = $"/{items.Length}";
         }
 
         public void ResizeGrid()
@@ -221,7 +234,9 @@ namespace RaidFilterUI
         {
             var filePath = FilterFileComboBox.SelectedItem?.ToString();
             var isKeep = InvertCheckBox.IsChecked != null && InvertCheckBox.IsChecked.Value;
-            ThreadPool.QueueUserWorkItem(state => Filter(filePath, isKeep));
+            var artifacts = ArtifactCheckBox.IsChecked != null && ArtifactCheckBox.IsChecked.Value;
+
+            ThreadPool.QueueUserWorkItem(state => Filter(filePath, isKeep, artifacts));
         }
 
         private void FilterFileComboBox_DropDownOpened(object sender, EventArgs e)

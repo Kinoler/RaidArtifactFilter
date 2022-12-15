@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Raid.DataModel;
+using HellHades.ArtifactExtractor.Models;
 
 namespace RaidArtifactsFilter.Extensions
 {
@@ -12,54 +12,54 @@ namespace RaidArtifactsFilter.Extensions
     {
         public static int GetRankNumber(this Artifact artifact)
         {
-            return Configuration.Instance.ArtifactRankTransfer.ContainsKey(artifact.Rank) ? Configuration.Instance.ArtifactRankTransfer[artifact.Rank] : 0;
+            return (int)artifact.Rank;
         }
 
         public static int GetRarityNumber(this Artifact artifact)
         {
-            return Configuration.Instance.ArtifactRarityTransfer.ContainsKey(artifact.RarityId) ? Configuration.Instance.ArtifactRarityTransfer[artifact.RarityId] : 0;
+            return (int)artifact.Rarity;
         }
 
         public static Color GetRarityColor(this Artifact artifact)
         {
-            return Configuration.Instance.ArtifactRarityColorsTransfer.ContainsKey(artifact.RarityId) ? Configuration.Instance.ArtifactRarityColorsTransfer[artifact.RarityId] : Color.Black;
+            return Configuration.Instance.ArtifactRarityColorsTransfer.ContainsKey(artifact.Rarity.ToString()) ? Configuration.Instance.ArtifactRarityColorsTransfer[artifact.Rarity.ToString()] : Color.Black;
         }
 
         public static string GetSetKind(this Artifact artifact)
         {
-            if (artifact.SetKindId == "None")
-                return Configuration.Instance.ArtifactFractionTransfer.ContainsKey(artifact.Faction) ? Configuration.Instance.ArtifactFractionTransfer[artifact.Faction].ToString() : "0";
+            if (artifact.Set == ArtifactSet.None)
+                return artifact.RequiredFraction.ToString();
             return artifact.GetSetKindNumber().ToString();
         }
 
         public static int GetSetKindNumber(this Artifact artifact)
         {
-            return Configuration.Instance.ArtifactSetKindTransfer.ContainsKey(artifact.SetKindId) ? Configuration.Instance.ArtifactSetKindTransfer[artifact.SetKindId] : 1000;
+            return (int)artifact.Set;
         }
 
         public static int GetFractionNumber(this Artifact artifact)
         {
-            return Configuration.Instance.ArtifactFractionNumberTransfer.ContainsKey(artifact.Faction) ? Configuration.Instance.ArtifactFractionNumberTransfer[artifact.Faction] : 1000;
+            return (int)artifact.RequiredFraction;
         }
 
         public static int GetTypeNumber(this Artifact artifact)
         {
-            return Configuration.Instance.ArtifactTypeTransfer.ContainsKey(artifact.KindId) ? Configuration.Instance.ArtifactTypeTransfer[artifact.KindId] : 1000;
+            return Configuration.Instance.ArtifactTypeTransfer.ContainsKey(artifact.Kind.ToString()) ? Configuration.Instance.ArtifactTypeTransfer[artifact.Kind.ToString()] : 1000;
         }
 
-        public static string GetStatKindId(this ArtifactStatBonus stat)
+        public static string GetStatKindId(this ArtifactBonus stat)
         {
-            return stat.Absolute ? stat.KindId : $"{stat.KindId}%";
+            return $"{stat.Kind}{(stat.IsAbsolute ? "" : "%")}";
         }
 
-        public static int GetStatNumber(this ArtifactStatBonus stat)
+        public static int GetStatNumber(this ArtifactBonus stat)
         {
             return Configuration.Instance.ArtifactStatTransfer.ContainsKey(stat.GetStatKindId()) ? Configuration.Instance.ArtifactStatTransfer[stat.GetStatKindId()] : 1000;
         }
 
-        public static int GetStatValue(this ArtifactStatBonus stat)
+        public static int GetStatValue(this ArtifactBonus stat)
         {
-            return (int)(stat.Absolute ? stat.Value : stat.Value * 100);
+            return (int)(stat.IsAbsolute ? stat.Value : stat.Value * 100);
         }
 
         public static (IEnumerable<T>, IEnumerable<T>) Determine<T>(this IEnumerable<T> list, Predicate<T> action)

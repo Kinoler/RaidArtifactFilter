@@ -14,6 +14,7 @@ namespace FileCompiler.Visitors
         public override Predicate<TItem> VisitInternal(TokenHandler expression)
         {
             var firstArgument = FirstArgument;
+
             var comparisonType = expression.GetCurrentToken().Value;
 
             var token = expression.GetNextToken();

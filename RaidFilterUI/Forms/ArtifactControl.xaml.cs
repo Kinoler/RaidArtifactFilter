@@ -32,6 +32,7 @@ namespace RaidFilterUI.Forms
             var color = Color.FromRgb(model.Rarity.R, model.Rarity.G, model.Rarity.B);
             this.RarityBorder.BorderBrush = new SolidColorBrush(color);
             this.ArtifactImage.Source = ImageCache.Instance.GetImage(model.ImgName);
+            this.ArtifactImage.Opacity = model.IsActivate ? 1 : 0.3;
 
             this.MainStatName.Content = model.Stats[0].Name;
             this.MainStatValue.Content = model.Stats[0].Value;
@@ -121,6 +122,7 @@ namespace RaidFilterUI.Forms
     public class ArtifactControlModel
     {
         public int Level { get; set; }
+        public bool IsActivate { get; set; }
         public string ImgName { get; set; }
         public int Rank { get; set; }
         public System.Drawing.Color Rarity { get; set; }

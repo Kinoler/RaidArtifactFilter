@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Raid.DataModel;
+using HellHades.ArtifactExtractor.Models;
 using RaidArtifactsFilter;
 using RaidArtifactsFilter.Extensions;
 using RaidFilterUI.Forms;
@@ -12,25 +12,25 @@ namespace RaidFilterUI.Helpers
 {
     public static class Extensions
     {
-        public static ArtifactControlModel ToArtifactControlModel(this Artifact artifact)
+        public static ArtifactControlModel ToArtifactControlModel(this Artifact artifact, bool isActive)
         {
-
             return new ArtifactControlModel()
             {
                 Level = artifact.Level,
+                IsActivate = isActive,
                 Rank = artifact.GetRankNumber(),
                 Rarity = artifact.GetRarityColor(),
-                ImgName = $"{artifact.GetSetKind()}_{(artifact.KindId != "Cloak" ? artifact.KindId : "Amulett")}.png",
+                ImgName = $"{artifact.GetSetKind()}_{(artifact.Kind != ArtifactKind.Cloak ? artifact.Kind : "Amulett")}.png",
                 Stats = artifact.SecondaryBonuses
-                    .Reverse()
-                    .Append(artifact.PrimaryBonus)
+                    .ToArray()
+                    .Reverse().Append(artifact.PrimaryBonus)
                     .Reverse()
                     .Select(stat => new StatControlModel(
-                        LocalizationHelper.GetShortStat(stat.KindId),
+                        LocalizationHelper.GetShortStat(stat.Kind.ToString()),
                         stat.Value,
-                        stat.Absolute,
+                        stat.IsAbsolute,
                         stat.Level,
-                        stat.GlyphPower))
+                        stat.Enhancement))
                     .ToArray()
             };
         }

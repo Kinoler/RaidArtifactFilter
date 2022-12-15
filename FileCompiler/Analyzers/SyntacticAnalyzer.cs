@@ -21,7 +21,7 @@ namespace FileCompiler.Analyzers
             }
             catch (Exception e)
             {
-                throw new Exception($"{e.Message} Position {tokenHandler.Position}");
+                throw new Exception($"{e.Message} Token {tokenHandler.GetCurrentToken().Value}{tokenHandler.GetNextToken().Value}{tokenHandler.GetNextToken().Value}{tokenHandler.GetNextToken().Value}{tokenHandler.GetNextToken().Value}{tokenHandler.GetNextToken().Value}");
             }
         }
     }

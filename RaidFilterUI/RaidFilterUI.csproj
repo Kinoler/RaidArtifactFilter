@@ -2,13 +2,22 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RaidItemFilter\RaidArtifactsFilter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HellHades.ArtifactExtractor">
+      <HintPath>C:\Users\Kinoler\AppData\Roaming\HellHades Artifact Extractor\HellHades.ArtifactExtractor.dll</HintPath>
+    </Reference>
+    <Reference Include="HellHades.ArtifactExtractor.Models">
+      <HintPath>C:\Users\Kinoler\AppData\Roaming\HellHades Artifact Extractor\HellHades.ArtifactExtractor.Models.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

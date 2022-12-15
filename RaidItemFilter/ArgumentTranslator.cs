@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Raid.DataModel;
+using HellHades.ArtifactExtractor.Models;
 
 namespace RaidArtifactsFilter
 {
@@ -37,13 +37,7 @@ namespace RaidArtifactsFilter
             return Configuration.Instance.ArtifactRarityTransfer.ContainsKey(rarity) ? Configuration.Instance.ArtifactRarityTransfer[rarity] : 0;
         }
 
-        public static string[] ResolveSet(this Func<Artifact, string> argAction, Artifact item)
-        {
-            var set = argAction.ResolveArgument(item);
-            return set.ResolveSet();
-        }
-
-        public static string[] ResolveSet(this string set)
+        public static string[] ResolveSetByNumber(this string set)
         {
             return Configuration.Instance.ArgumentArtifactSetKindTransfer.ContainsKey(set) ? Configuration.Instance.ArgumentArtifactSetKindTransfer[set].Split(Separator) : new []{ set };
         }

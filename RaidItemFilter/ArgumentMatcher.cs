@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Raid.DataModel;
+using HellHades.ArtifactExtractor.Models;
 using RaidArtifactsFilter.Extensions;
 
 namespace RaidArtifactsFilter
 {
     public static class ArgumentMatcher
     {
-        public static bool IsStatEquals(this ArtifactStatBonus stat, string str)
+        public static bool IsStatEquals(this ArtifactBonus stat, string str)
         {
             var statKindId = stat.GetStatKindId();
             var argKindId = str.ResolveStat();
@@ -19,16 +19,16 @@ namespace RaidArtifactsFilter
 
         public static bool IsArtifactTypeEquals(this Artifact artifact, string type)
         {
-            var artifactKindId = artifact.KindId;
+            var artifactKindId = artifact.Kind.ToString();
             var argKindId = type.ResolveArtifactType();
             return argKindId.Any(el => el == artifactKindId);
         }
 
         public static bool IsArtifactSetEquals(this Artifact artifact, string set)
         {
-            var artifactKindId = artifact.SetKindId;
-            var argKindId = set.ResolveSet();
-            return argKindId.Any(el => el == artifactKindId);
+            var artifactKindId = artifact.GetSetKindNumber();
+            var argKindId = set.ResolveSetByNumber();
+            return argKindId.Any(el => int.Parse(el) == artifactKindId);
         }
 
         public static bool ContainsSubStat(this Artifact artifact, string str)

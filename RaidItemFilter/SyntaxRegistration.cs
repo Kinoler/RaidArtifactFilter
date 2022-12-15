@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FileCompiler.PublicAPI;
-using Raid.DataModel;
+using HellHades.ArtifactExtractor.Models;
 using RaidArtifactsFilter.Extensions;
 
 namespace RaidArtifactsFilter
@@ -17,6 +18,10 @@ namespace RaidArtifactsFilter
 
             registry.RegisterFunctionAction(
                 "Set", (item, list) => 
+                    list.Any(argAction => item.Set.ToString() == argAction.ResolveArgument(item)));
+
+            registry.RegisterFunctionAction(
+                "SetEx", (item, list) => 
                     list.Any(argAction => item.IsArtifactSetEquals(argAction.ResolveArgument(item))));
 
             registry.RegisterFunctionAction(
@@ -33,7 +38,11 @@ namespace RaidArtifactsFilter
 
             registry.RegisterFunctionAction(
                 "Rarity", (item, list) => 
-                    list.Any(argAction => item.RarityId == argAction(item)));
+                    list.Any(argAction => item.Rarity.ToString() == argAction.ResolveArgument(item)));
+
+            registry.RegisterFunctionAction(
+                "RarityEx", (item, list) => 
+                    list.Any(argAction => item.GetRarityNumber() == argAction.ResolveNumber(item)));
 
             registry.RegisterFunctionAction(
                 "RarityMore", (item, argAction) =>
@@ -73,7 +82,7 @@ namespace RaidArtifactsFilter
                         .Take(list.Count - 1)
                         .Aggregate(0, (prev, argAction) =>
                             prev + item.GetProcCount(argAction.ResolveArgument(item)))
-                    == list.Last().ResolveNumber(item));
+                    >= Math.Min(list.Last().ResolveNumber(item), ComputeCurrentProc(item)));
 
             registry.RegisterFunctionAction(
                 "ProcMore", (item, list) =>
@@ -91,11 +100,20 @@ namespace RaidArtifactsFilter
                             prev + item.GetProcCount(argAction.ResolveArgument(item))) 
                     < list.Last().ResolveNumber(item));
 
-            registry.RegisterPropertyAction("MaxProc", artifact => 
-                artifact.Level < 4 ? 0 : 
-                artifact.Level < 8 ? 1 : 
-                artifact.Level < 12 ? 2 : 
-                artifact.Level < 16 ? 3 : 4);
+            registry.RegisterPropertyAction("CurrentProc", ComputeCurrentProc) ;
+
+            registry.RegisterPropertyAction("Level", artifact => artifact.Level);
+            registry.RegisterPropertyAction("Rank", artifact => (int)artifact.Rank);
+        }
+
+        public static int ComputeCurrentProc(Artifact artifact)
+        {
+            return Math.Min(
+                    artifact.Level < 4 ? 0 :
+                    artifact.Level < 8 ? 1 :
+                    artifact.Level < 12 ? 2 :
+                    artifact.Level < 16 ? 3 : 4,
+                    artifact.GetRarityNumber());
         }
     }
 }
