@@ -16,6 +16,7 @@ namespace RaidFilterUI.Helpers
         {
             return new ArtifactControlModel()
             {
+                Id = artifact.Id,
                 Level = artifact.Level,
                 IsActivate = isActive,
                 Rank = artifact.GetRankNumber(),

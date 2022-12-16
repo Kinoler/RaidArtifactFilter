@@ -45,7 +45,30 @@ namespace FileCompiler.Visitors
             if (token != null && token.Type != TokenType.BracketEnd)
                 throw new Exception("The ')' expected.");
 
-            return item => predicators.Aggregate(false, (b, list) => b || list.Aggregate(true, (b1, predicate) => b1 && predicate(item)));
+            return item =>
+            {
+                var or = false;
+                foreach (var predicatorsAnd in predicators)
+                {
+                    var and = true;
+                    foreach (var predicator in predicatorsAnd)
+                    {
+                        if (!predicator(item))
+                        {
+                            and = false;
+                            break;
+                        }
+                    }
+
+                    if (and)
+                    {
+                        or = true;
+                        break;
+                    }
+                }
+
+                return or;
+            };
         }
     }
 }

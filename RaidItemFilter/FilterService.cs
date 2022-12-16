@@ -139,7 +139,7 @@ namespace RaidArtifactsFilter
             }
         }
 
-        public Artifact[] GetFilteredItems(bool isKeep)
+        public Artifact[] GetFilteredItems(bool isKeep, int id)
         {
             var filteredItems = new ConcurrentBag<Artifact>();
             try
@@ -149,14 +149,18 @@ namespace RaidArtifactsFilter
                 var action = ParserService.GenerateItemFilter<Artifact>(fileText);
                 foreach (var artifact in Artifacts)
                 {
+                    if (artifact.Id == id)
+                    {
+                        var t = 0;
+                    }
                     if (isKeep)
                     {
-                        if (!action(artifact))
+                        if (action(artifact))
                             filteredItems.Add(artifact);
                     }
                     else
                     {
-                        if (action(artifact))
+                        if (!action(artifact))
                             filteredItems.Add(artifact);
                     }
                 }

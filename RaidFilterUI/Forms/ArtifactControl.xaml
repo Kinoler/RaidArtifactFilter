@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RaidFilterUI.Forms"
              mc:Ignorable="d" Height="85" Width="215" Foreground="{x:Null}">
-    <Grid Name="MainGrid">
+    <Grid Name="MainGrid" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown">
         <Border Name="RarityBorder" BorderBrush="#FFB000" BorderThickness="1" Margin="5, 5"  HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="75">
             <Image Name="ArtifactImage"/>
         </Border>

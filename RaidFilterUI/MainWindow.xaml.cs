@@ -34,6 +34,7 @@ namespace RaidFilterUI
         public List<ArtifactControl> ArtifactControlPool { get; set; } = new List<ArtifactControl>();
 
         public int CurrentVisibleArtifactControlCount { get; set; }
+        public int Id { get; set; }
         private int _currentCountInRow;
         private FilterService FilterService { get; }
 
@@ -85,7 +86,7 @@ namespace RaidFilterUI
                     el.Kind is ArtifactKind.Ring or ArtifactKind.Banner or ArtifactKind.Cloak);
 
                 FilterService.SetFile($"{filePath}.filter");
-                var artifacts = FilterService.GetFilteredItems(isKeep);
+                var artifacts = FilterService.GetFilteredItems(isKeep, this.Id);
                 var artifactControlModes = FilterService
                     .Artifacts
                     .Where(jewelsFilterAction)
@@ -143,7 +144,7 @@ namespace RaidFilterUI
 
                     for (var i = 0; i < artifactControlModes.Length; i++)
                     {
-                        artifactControls[i].Init(artifactControlModes[i]);
+                        artifactControls[i].Init(artifactControlModes[i], this);
                     }
 
                     TraceService.TimingArr("Elements updated");

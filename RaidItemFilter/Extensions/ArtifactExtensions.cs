@@ -28,7 +28,7 @@ namespace RaidArtifactsFilter.Extensions
         public static string GetSetKind(this Artifact artifact)
         {
             if (artifact.Set == ArtifactSet.None)
-                return artifact.RequiredFraction.ToString();
+                return Configuration.Instance.ArtifactFractionTransfer.ContainsKey(artifact.RequiredFraction.ToString()) ? Configuration.Instance.ArtifactFractionTransfer[artifact.RequiredFraction.ToString()] : artifact.RequiredFraction.ToString();
             return artifact.GetSetKindNumber().ToString();
         }
 

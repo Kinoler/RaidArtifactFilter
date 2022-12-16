@@ -20,13 +20,19 @@ namespace RaidFilterUI.Forms
     /// </summary>
     public sealed partial class ArtifactControl : UserControl
     {
+        public MainWindow? MainWindow { get; set; }
+        public ArtifactControlModel Model { get; set; }
+
         public ArtifactControl()
         {
             InitializeComponent();
         }
-        
-        public void Init(ArtifactControlModel model)
+
+        public void Init(ArtifactControlModel model, MainWindow win)
         {
+            this.MainWindow = win;
+            this.Model = model;
+
             this.LevelLabel.Content = model.Level > 0 ? $"+{model.Level}" : "";
             this.StarLabel.Content = $"{model.Rank}";
             var color = Color.FromRgb(model.Rarity.R, model.Rarity.G, model.Rarity.B);
@@ -117,6 +123,15 @@ namespace RaidFilterUI.Forms
             //this.StarGrid = Cache[model.Rank];
             */
         }
+
+        private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (this.MainWindow != null)
+            {
+                this.MainWindow.CurrentIdLable.Content = $"Id: {this.Model.Id}";
+                this.MainWindow.Id = this.Model.Id;
+            }
+        }
     }
 
     public class ArtifactControlModel
@@ -127,6 +142,7 @@ namespace RaidFilterUI.Forms
         public int Rank { get; set; }
         public System.Drawing.Color Rarity { get; set; }
         public StatControlModel[] Stats { get; set; }
+        public int Id { get; set; }
     }
 
     public class StatControlModel
